@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WanderMind — Set your pace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --ink: #000000;
+    --muted: #848A97;
+    --accent: #2D39F7;
+    --line: #E3E4EA;
+    --soft: #F0F1F4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .stage {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 56px 48px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Topbar */
+  .topbar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 64px; }
+  .wordmark { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; text-decoration: none; color: var(--ink); }
+  .wordmark em { font-style: normal; font-weight: 400; color: var(--accent); }
+  .progress { display: flex; gap: 6px; }
+  .pdot { width: 24px; height: 3px; background: var(--line); border-radius: 2px; transition: background 240ms ease; }
+  .pdot.on { background: var(--ink); }
+  .pdot.now { background: var(--accent); }
+
+  /* Step header */
+  .step-header { text-align: left; max-width: 720px; margin-bottom: 56px; }
+  .step-eyebrow { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; }
+  .step-question { font-family: 'Inter', sans-serif; font-weight: 700; font-size: clamp(40px, 6vw, 72px); line-height: 1.05; letter-spacing: -0.025em; }
+  .step-question em { font-style: normal; font-weight: 700; color: var(--accent); }
+  .step-hint { font-family: 'Inter', sans-serif; font-weight: 400; font-size: 18px; color: var(--muted); margin-top: 24px; max-width: 520px; line-height: 1.5; }
+
+  /* Sliders */
+  .rhythm-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    max-width: 720px;
+    flex: 1;
+  }
+  .slider-group {
+    display: flex;
+    flex-direction: column;
+  }
+  .slider-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .slider-value {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: clamp(40px, 5vw, 56px);
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    margin-bottom: 32px;
+    min-height: 1em;
+    transition: color 200ms ease;
+  }
+
+  .slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    background: var(--line);
+    margin: 0;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    background: var(--ink);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--ink);
+    transition: transform 200ms ease;
+  }
+  .slider::-webkit-slider-thumb:hover {
+    transform: scale(1.12);
+  }
+  .slider:active::-webkit-slider-thumb {
+    transform: scale(1.18);
+  }
+  .slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    background: var(--ink);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--ink);
+  }
+
+  .slider-ends {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  /* Footer */
+  .step-footer {
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .back-link {
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 8px 0;
+    transition: color 200ms ease;
+  }
+  .back-link:hover { color: var(--ink); }
+  .continue-btn {
+    display: inline-block;
+    padding: 14px 28px;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: transform 200ms ease;
+  }
+  .continue-btn:hover { transform: translateX(4px); }
+
+  @media (max-width: 720px) {
+    .stage { padding: 24px 20px 32px; }
+    .topbar { padding-bottom: 40px; }
+    .step-header { margin-bottom: 40px; }
+    .rhythm-fields { gap: 56px; }
+    .step-footer { margin-top: 48px; flex-direction: column; gap: 20px; align-items: stretch; }
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+
+    <nav class="topbar">
+      <a href="index.html" class="wordmark">Wander<em>mind</em></a>
+      <div class="progress" aria-label="Step 2 of 6">
+        <span class="pdot on"></span>
+        <span class="pdot now"></span>
+        <span class="pdot"></span>
+        <span class="pdot"></span>
+        <span class="pdot"></span>
+        <span class="pdot"></span>
+      </div>
+    </nav>
+
+    <header class="step-header">
+      <div class="step-eyebrow">Step 2 of 6 — Your rhythm</div>
+      <h1 class="step-question">Set your <em>pace</em>.</h1>
+      <p class="step-hint">Two quick sliders. Move them until it feels right.</p>
+    </header>
+
+    <main class="rhythm-fields">
+
+      <div class="slider-group">
+        <div class="slider-label">Pace</div>
+        <div class="slider-value" id="pace-value">Unhurried</div>
+        <input
+          type="range"
+          min="0"
+          max="4"
+          value="1"
+          class="slider"
+          id="pace-slider"
+          data-target="pace-value"
+          data-words='["Slow days","Unhurried","Steady","Active","Packed schedule"]'
+          aria-label="Pace"
+        />
+        <div class="slider-ends">
+          <span>Slow days</span>
+          <span>Packed schedule</span>
+        </div>
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">Budget</div>
+        <div class="slider-value" id="budget-value">Considered</div>
+        <input
+          type="range"
+          min="0"
+          max="4"
+          value="2"
+          class="slider"
+          id="budget-slider"
+          data-target="budget-value"
+          data-words='["Frugal","Modest","Considered","Generous","No limit"]'
+          aria-label="Budget"
+        />
+        <div class="slider-ends">
+          <span>Frugal</span>
+          <span>No limit</span>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="step-footer">
+      <a href="onboarding-welcome.html" class="back-link">← Back</a>
+      <a href="onboarding-loves.html" class="continue-btn">Continue →</a>
+    </footer>
+
+  </div>
+
+  <script>
+    document.querySelectorAll('.slider').forEach(slider => {
+      const target = document.getElementById(slider.dataset.target);
+      const words = JSON.parse(slider.dataset.words);
+
+      function updateFill() {
+        const v = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+        slider.style.background = `linear-gradient(to right, var(--accent) 0%, var(--accent) ${v}%, var(--line) ${v}%, var(--line) 100%)`;
+      }
+
+      slider.addEventListener('input', () => {
+        target.textContent = words[slider.value];
+        updateFill();
+      });
+
+      updateFill();
+    });
+  </script>
+</body>
+</html>

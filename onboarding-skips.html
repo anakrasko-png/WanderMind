@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WanderMind — What do you skip?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* BYCo brand tokens */
+  :root {
+    --bg: #FFFFFF;
+    --ink: #000000;
+    --muted: #848A97;
+    --accent: #2D39F7;
+    --line: #E3E4EA;
+    --soft: #F0F1F4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .stage {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 56px 48px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Topbar */
+  .topbar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 64px; }
+  .wordmark { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; text-decoration: none; color: var(--ink); }
+  .wordmark em { font-style: normal; font-weight: 400; color: var(--accent); }
+  .progress { display: flex; gap: 6px; }
+  .pdot { width: 24px; height: 3px; background: var(--line); border-radius: 2px; transition: background 240ms ease; }
+  .pdot.on { background: var(--ink); }
+  .pdot.now { background: var(--accent); }
+
+  /* Step header */
+  .step-header { text-align: left; max-width: 720px; margin-bottom: 56px; }
+  .step-eyebrow { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; }
+  .step-question { font-family: 'Inter', sans-serif; font-weight: 700; font-size: clamp(40px, 6vw, 72px); line-height: 1.05; letter-spacing: -0.025em; }
+  .step-question em { font-style: normal; font-weight: 700; color: var(--accent); }
+  .step-hint { font-family: 'Inter', sans-serif; font-weight: 400; font-size: 18px; color: var(--muted); margin-top: 24px; max-width: 520px; line-height: 1.5; }
+
+  /* Skip chip cloud */
+  .chip-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    max-width: 920px;
+    align-content: flex-start;
+    flex: 1;
+  }
+  .chip-skip {
+    padding: 14px 22px;
+    background: var(--soft);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 17px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 200ms ease, border-color 200ms ease, color 200ms ease, transform 200ms ease;
+  }
+  .chip-skip:hover {
+    background: var(--bg);
+    border-color: var(--ink);
+    transform: translateY(-1px);
+  }
+  .chip-skip.selected {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+
+  /* Footer */
+  .step-footer {
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .back-link {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 8px 0;
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+  .back-link:hover { color: var(--ink); }
+  .footer-meta { display: flex; align-items: center; gap: 24px; }
+  .selected-count { font-family: 'Inter', sans-serif; font-weight: 500; font-size: 15px; color: var(--muted); }
+  .continue-btn {
+    display: inline-block;
+    padding: 14px 28px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: transform 200ms ease;
+  }
+  .continue-btn:hover { transform: translateX(4px); }
+
+  @media (max-width: 720px) {
+    .stage { padding: 24px 20px 32px; }
+    .topbar { padding-bottom: 40px; }
+    .step-header { margin-bottom: 40px; }
+    .step-footer { margin-top: 40px; flex-direction: column; gap: 20px; align-items: stretch; }
+    .footer-meta { justify-content: space-between; }
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+
+    <nav class="topbar">
+      <a href="index.html" class="wordmark">Wander<em>mind</em></a>
+      <div class="progress" aria-label="Step 4 of 6">
+        <span class="pdot on"></span>
+        <span class="pdot on"></span>
+        <span class="pdot on"></span>
+        <span class="pdot now"></span>
+        <span class="pdot"></span>
+        <span class="pdot"></span>
+      </div>
+    </nav>
+
+    <header class="step-header">
+      <div class="step-eyebrow">Step 4 of 6 — Your skips</div>
+      <h1 class="step-question">What do you <em>skip</em>?</h1>
+      <p class="step-hint">Tap anything that drains the trip. Skip this step if nothing applies.</p>
+    </header>
+
+    <main class="chip-cloud" id="chips">
+      <button class="chip-skip">Crowded landmarks</button>
+      <button class="chip-skip">Packed itineraries</button>
+      <button class="chip-skip">Tourist traps</button>
+      <button class="chip-skip">Mega resorts</button>
+      <button class="chip-skip">Group tours</button>
+      <button class="chip-skip">Cruise ships</button>
+      <button class="chip-skip">All-inclusives</button>
+      <button class="chip-skip">Theme parks</button>
+      <button class="chip-skip">Long flights</button>
+      <button class="chip-skip">Cold weather</button>
+      <button class="chip-skip">Hot weather</button>
+      <button class="chip-skip">Buffets</button>
+      <button class="chip-skip">Loud places</button>
+      <button class="chip-skip">Camping</button>
+    </main>
+
+    <footer class="step-footer">
+      <a href="onboarding-loves.html" class="back-link">← Back</a>
+      <div class="footer-meta">
+        <span class="selected-count" id="count">Optional</span>
+        <a href="onboarding-practical.html" class="continue-btn">Continue →</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    const countEl = document.getElementById('count');
+    document.querySelectorAll('.chip-skip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        chip.classList.toggle('selected');
+        const n = document.querySelectorAll('.chip-skip.selected').length;
+        countEl.textContent = n === 0 ? 'Optional' : (n === 1 ? '1 skip' : `${n} skips`);
+      });
+    });
+  </script>
+</body>
+</html>

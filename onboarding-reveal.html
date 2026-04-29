@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WanderMind — Meet your traveler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --ink: #000000;
+    --muted: #848A97;
+    --accent: #2D39F7;
+    --line: #E3E4EA;
+    --soft: #F0F1F4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .reveal-stage {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .reveal-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px 56px;
+  }
+  .wordmark { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; text-decoration: none; color: var(--ink); }
+  .wordmark em { font-style: normal; font-weight: 400; color: var(--accent); }
+  .nav-meta { font-size: 11px; color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase; }
+
+  .reveal-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 48px 56px 96px;
+    gap: 32px;
+  }
+
+  /* Choreographed reveal — staggered fade-up */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .reveal-eyebrow,
+  .reveal-name,
+  .reveal-animal,
+  .reveal-palette,
+  .reveal-tagline,
+  .reveal-cta {
+    opacity: 0;
+  }
+
+  .reveal-eyebrow { animation: fade-up 0.7s ease 0.3s forwards; }
+  .reveal-name    { animation: fade-up 0.9s ease 0.8s forwards; }
+  .reveal-animal  { animation: scale-in 1.0s ease 1.5s forwards; }
+  .reveal-palette { animation: fade-up 0.7s ease 2.2s forwards; }
+  .reveal-tagline { animation: fade-up 0.7s ease 2.7s forwards; }
+  .reveal-cta     { animation: fade-up 0.7s ease 3.2s forwards; }
+
+  .reveal-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .reveal-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: clamp(60px, 11vw, 132px);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    max-width: 920px;
+  }
+  .reveal-name em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .reveal-animal {
+    width: 144px;
+    height: 144px;
+  }
+  .reveal-animal svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  .reveal-animal .ink-fill { fill: var(--ink); }
+  .reveal-animal .ink-stroke {
+    fill: none;
+    stroke: var(--ink);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .reveal-animal .eye { fill: var(--bg); }
+
+  .reveal-palette {
+    display: flex;
+    gap: 6px;
+  }
+  .reveal-palette .swatch {
+    width: 48px;
+    height: 96px;
+    border-radius: 8px;
+  }
+
+  .reveal-tagline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: clamp(20px, 2.4vw, 26px);
+    color: var(--muted);
+    max-width: 580px;
+    line-height: 1.4;
+  }
+
+  .reveal-cta {
+    margin-top: 16px;
+    padding: 18px 32px;
+    background: var(--accent);
+    color: var(--bg);
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 200ms ease;
+  }
+  .reveal-cta:hover {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 720px) {
+    .reveal-topbar { padding: 24px 20px; }
+    .reveal-content { padding: 32px 24px 64px; gap: 24px; }
+    .reveal-animal { width: 112px; height: 112px; }
+    .reveal-palette .swatch { width: 36px; height: 72px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-eyebrow,
+    .reveal-name,
+    .reveal-animal,
+    .reveal-palette,
+    .reveal-tagline,
+    .reveal-cta {
+      opacity: 1;
+      animation: none;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="reveal-stage">
+
+    <div class="reveal-topbar">
+      <a href="index.html" class="wordmark">Wander<em>mind</em></a>
+      <div class="nav-meta">Profile · April 2026</div>
+    </div>
+
+    <div class="reveal-content">
+
+      <p class="reveal-eyebrow">You are…</p>
+
+      <h1 class="reveal-name">The <em>Slow</em> Wanderer</h1>
+
+      <div class="reveal-animal" aria-label="Spirit animal: heron">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <ellipse class="ink-fill" cx="44" cy="58" rx="14" ry="7.5" />
+          <path class="ink-fill" d="M 30 56 L 22 50 L 26 62 Z" />
+          <path class="ink-stroke" d="M 52 53 C 64 49 58 32 64 22" stroke-width="3.5" />
+          <path class="ink-stroke" d="M 62 19 L 58 13" stroke-width="1.5" />
+          <circle class="ink-fill" cx="64" cy="22" r="3.5" />
+          <path class="ink-fill" d="M 67 22 L 80 23 L 67 24 Z" />
+          <circle class="eye" cx="65" cy="21" r="0.75" />
+          <path class="ink-stroke" d="M 46 65 L 45 92" stroke-width="1.5" />
+          <path class="ink-stroke" d="M 40 65 L 36 75 L 42 80" stroke-width="1.5" />
+        </svg>
+      </div>
+
+      <div class="reveal-palette" aria-hidden="true">
+        <div class="swatch" style="background:#FFE099"></div>
+        <div class="swatch" style="background:#FFB200"></div>
+        <div class="swatch" style="background:#848A97"></div>
+        <div class="swatch" style="background:#000000"></div>
+      </div>
+
+      <p class="reveal-tagline">Quiet mornings, neighborhood markets, and the long way home — you travel to slow down, not speed up.</p>
+
+      <a href="profile-result.html" class="reveal-cta">Enter your profile →</a>
+
+    </div>
+
+  </div>
+</body>
+</html>

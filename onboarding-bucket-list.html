@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WanderMind — Where do you dream of?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --ink: #000000;
+    --muted: #848A97;
+    --accent: #2D39F7;
+    --line: #E3E4EA;
+    --soft: #F0F1F4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .stage {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 56px 48px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topbar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 64px; }
+  .wordmark { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; text-decoration: none; color: var(--ink); }
+  .wordmark em { font-style: normal; font-weight: 400; color: var(--accent); }
+  .progress { display: flex; gap: 6px; }
+  .pdot { width: 24px; height: 3px; background: var(--line); border-radius: 2px; transition: background 240ms ease; }
+  .pdot.on { background: var(--ink); }
+  .pdot.now { background: var(--accent); }
+
+  .step-header { text-align: left; max-width: 720px; margin-bottom: 48px; }
+  .step-eyebrow { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; }
+  .step-question { font-family: 'Inter', sans-serif; font-weight: 700; font-size: clamp(40px, 6vw, 72px); line-height: 1.05; letter-spacing: -0.025em; }
+  .step-question em { font-style: normal; font-weight: 700; color: var(--accent); }
+  .step-hint { font-family: 'Inter', sans-serif; font-weight: 400; font-size: 18px; color: var(--muted); margin-top: 24px; max-width: 520px; line-height: 1.5; }
+
+  /* Bucket builder */
+  .bucket-builder {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    max-width: 920px;
+    flex: 1;
+  }
+
+  .add-row {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .add-input {
+    flex: 1;
+    padding: 16px 22px;
+    background: var(--soft);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--ink);
+    transition: background 200ms ease, border-color 200ms ease;
+  }
+  .add-input:focus {
+    outline: none;
+    border-color: var(--ink);
+    background: var(--bg);
+  }
+  .add-input::placeholder { color: var(--muted); }
+  .add-btn {
+    padding: 16px 24px;
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: opacity 200ms ease;
+  }
+  .add-btn:hover { opacity: 0.85; }
+
+  .suggestions-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-top: -8px;
+  }
+  .suggestions-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 8px;
+  }
+  .suggestion-chip {
+    padding: 8px 14px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: border-color 200ms ease, color 200ms ease;
+  }
+  .suggestion-chip:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .preview-section {
+    padding: 24px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-top: 8px;
+  }
+  .preview-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .preview-svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .preview-svg .line { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linecap: round; }
+  .preview-svg .dot { fill: var(--ink); stroke: var(--bg); stroke-width: 2; }
+  .preview-svg .stem { stroke: var(--line); stroke-width: 1; }
+  .preview-svg .place { fill: var(--ink); font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; }
+  .preview-svg .when { fill: var(--muted); font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 0.16em; }
+  .preview-empty { fill: var(--muted); font-family: 'Inter', sans-serif; font-size: 14px; font-style: italic; }
+
+  .bucket-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .bucket-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    gap: 16px;
+  }
+  .bucket-item:last-child { border-bottom: none; }
+  .bucket-place {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--ink);
+    flex: 1;
+  }
+  .season-toggle {
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    transition: border-color 200ms ease, color 200ms ease;
+  }
+  .season-toggle:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .remove-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: color 200ms ease;
+  }
+  .remove-btn:hover { color: var(--ink); }
+
+  .bucket-empty {
+    padding: 24px 0;
+    color: var(--muted);
+    font-style: italic;
+    font-size: 16px;
+  }
+
+  .step-footer {
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .back-link {
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 8px 0;
+    transition: color 200ms ease;
+  }
+  .back-link:hover { color: var(--ink); }
+  .footer-meta { display: flex; align-items: center; gap: 24px; }
+  .selected-count { font-family: 'Inter', sans-serif; font-weight: 500; font-size: 15px; color: var(--muted); }
+  .continue-btn {
+    display: inline-block;
+    padding: 14px 28px;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: transform 200ms ease;
+  }
+  .continue-btn:hover { transform: translateX(4px); }
+
+  @media (max-width: 720px) {
+    .stage { padding: 24px 20px 32px; }
+    .topbar { padding-bottom: 40px; }
+    .step-header { margin-bottom: 32px; }
+    .add-row { flex-direction: column; }
+    .step-footer { margin-top: 40px; flex-direction: column; gap: 20px; align-items: stretch; }
+    .footer-meta { justify-content: space-between; }
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+
+    <nav class="topbar">
+      <a href="index.html" class="wordmark">Wander<em>mind</em></a>
+      <div class="progress" aria-label="Step 6 of 6">
+        <span class="pdot on"></span>
+        <span class="pdot on"></span>
+        <span class="pdot on"></span>
+        <span class="pdot on"></span>
+        <span class="pdot on"></span>
+        <span class="pdot now"></span>
+      </div>
+    </nav>
+
+    <header class="step-header">
+      <div class="step-eyebrow">Step 6 of 6 — Bucket list</div>
+      <h1 class="step-question">Where do you <em>dream</em> of?</h1>
+      <p class="step-hint">Add as many as you want. Don't worry about logistics — this is your wishlist.</p>
+    </header>
+
+    <main class="bucket-builder">
+
+      <div class="add-row">
+        <input type="text" class="add-input" id="add-input" placeholder="Type a place..." autocomplete="off" />
+        <button class="add-btn" id="add-btn">Add</button>
+      </div>
+
+      <div class="suggestions-row" id="suggestions"></div>
+
+      <div class="preview-section">
+        <div class="preview-label">Your wandering line</div>
+        <svg class="preview-svg" id="preview-svg" viewBox="0 0 1000 220" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+      </div>
+
+      <div class="bucket-list" id="bucket-list"></div>
+
+    </main>
+
+    <footer class="step-footer">
+      <a href="onboarding-practical.html" class="back-link">← Back</a>
+      <div class="footer-meta">
+        <span class="selected-count" id="count">3 places</span>
+        <a href="onboarding-reveal.html" class="continue-btn">Continue →</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    const SEASONS = ['Anytime', 'Spring', 'Summer', 'Fall', 'Winter', 'Someday'];
+    const SUGGESTIONS = ['Tokyo', 'Marrakech', 'Reykjavik', 'Mexico City', 'Cairo', 'Cape Town', 'Hanoi', 'Istanbul'];
+
+    let destinations = [
+      { place: 'Lisbon', season: 'Fall' },
+      { place: 'Kyoto, shoulder season', season: 'Spring' },
+      { place: 'Faroe Islands', season: 'Summer' }
+    ];
+
+    const listEl = document.getElementById('bucket-list');
+    const svgEl = document.getElementById('preview-svg');
+    const inputEl = document.getElementById('add-input');
+    const addBtnEl = document.getElementById('add-btn');
+    const suggEl = document.getElementById('suggestions');
+    const countEl = document.getElementById('count');
+
+    function escapeHtml(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function render() {
+      // List
+      if (destinations.length === 0) {
+        listEl.innerHTML = '<div class="bucket-empty">Your places will appear here.</div>';
+      } else {
+        listEl.innerHTML = destinations.map((d, i) => `
+          <div class="bucket-item">
+            <span class="bucket-place">${escapeHtml(d.place)}</span>
+            <button class="season-toggle" data-action="cycle" data-index="${i}">${d.season}</button>
+            <button class="remove-btn" data-action="remove" data-index="${i}" aria-label="Remove">×</button>
+          </div>
+        `).join('');
+      }
+
+      // Count
+      countEl.textContent = destinations.length === 1 ? '1 place' : `${destinations.length} places`;
+
+      // Wandering line
+      renderWandering();
+    }
+
+    function renderWandering() {
+      const width = 1000;
+      const margin = 80;
+      const usable = width - 2 * margin;
+      const yHigh = 80;
+      const yLow = 140;
+
+      if (destinations.length === 0) {
+        svgEl.innerHTML = '<text class="preview-empty" x="500" y="120" text-anchor="middle">Add a destination to start your line</text>';
+        return;
+      }
+
+      const points = destinations.map((d, i) => {
+        const x = destinations.length === 1
+          ? width / 2
+          : margin + (usable / Math.max(destinations.length - 1, 1)) * i;
+        const y = i % 2 === 0 ? yLow : yHigh;
+        return { x, y, place: d.place, season: d.season };
+      });
+
+      let pathD = '';
+      if (points.length > 1) {
+        pathD = `M ${points[0].x} ${points[0].y}`;
+        for (let i = 1; i < points.length; i++) {
+          const prev = points[i - 1];
+          const curr = points[i];
+          const dx = (curr.x - prev.x) * 0.5;
+          pathD += ` C ${prev.x + dx} ${prev.y} ${curr.x - dx} ${curr.y} ${curr.x} ${curr.y}`;
+        }
+      }
+
+      let svg = pathD ? `<path class="line" d="${pathD}" />` : '';
+      for (const p of points) {
+        svg += `
+          <g>
+            <circle class="dot" cx="${p.x}" cy="${p.y}" r="5" />
+            <line class="stem" x1="${p.x}" y1="${p.y + 12}" x2="${p.x}" y2="170" />
+            <text class="place" x="${p.x}" y="186" text-anchor="middle">${escapeHtml(p.place.split(',')[0])}</text>
+            <text class="when" x="${p.x}" y="202" text-anchor="middle">${p.season.toUpperCase()}</text>
+          </g>
+        `;
+      }
+      svgEl.innerHTML = svg;
+    }
+
+    function addDestination(place) {
+      const trimmed = String(place || '').trim();
+      if (!trimmed) return;
+      destinations.push({ place: trimmed, season: 'Anytime' });
+      inputEl.value = '';
+      render();
+    }
+
+    function removeDestination(index) {
+      destinations.splice(index, 1);
+      render();
+    }
+
+    function cycleSeason(index) {
+      const current = destinations[index].season;
+      const next = SEASONS[(SEASONS.indexOf(current) + 1) % SEASONS.length];
+      destinations[index].season = next;
+      render();
+    }
+
+    // Wire up suggestions
+    suggEl.innerHTML = '<span class="suggestions-label">Try</span>' + SUGGESTIONS.map(s =>
+      `<button class="suggestion-chip" data-place="${escapeHtml(s)}">${s}</button>`
+    ).join('');
+
+    suggEl.addEventListener('click', e => {
+      const target = e.target.closest('.suggestion-chip');
+      if (target) addDestination(target.dataset.place);
+    });
+
+    // Wire up add button
+    addBtnEl.addEventListener('click', () => addDestination(inputEl.value));
+    inputEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addDestination(inputEl.value);
+      }
+    });
+
+    // Wire up list (delegated)
+    listEl.addEventListener('click', e => {
+      const target = e.target.closest('[data-action]');
+      if (!target) return;
+      const action = target.dataset.action;
+      const index = parseInt(target.dataset.index, 10);
+      if (action === 'cycle') cycleSeason(index);
+      else if (action === 'remove') removeDestination(index);
+    });
+
+    render();
+  </script>
+</body>
+</html>

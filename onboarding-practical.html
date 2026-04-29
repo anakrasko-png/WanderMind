@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WanderMind — A few practical things</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --ink: #000000;
+    --muted: #848A97;
+    --accent: #2D39F7;
+    --line: #E3E4EA;
+    --soft: #F0F1F4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .stage {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 56px 48px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topbar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 64px; }
+  .wordmark { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; text-decoration: none; color: var(--ink); }
+  .wordmark em { font-style: normal; font-weight: 400; color: var(--accent); }
+  .progress { display: flex; gap: 6px; }
+  .pdot { width: 24px; height: 3px; background: var(--line); border-radius: 2px; transition: background 240ms ease; }
+  .pdot.on { background: var(--ink); }
+  .pdot.now { background: var(--accent); }
+
+  .step-header { text-align: left; max-width: 720px; margin-bottom: 56px; }
+  .step-eyebrow { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; }
+  .step-question { font-family: 'Inter', sans-serif; font-weight: 700; font-size: clamp(40px, 6vw, 72px); line-height: 1.05; letter-spacing: -0.025em; }
+  .step-question em { font-style: normal; font-weight: 700; color: var(--accent); }
+  .step-hint { font-family: 'Inter', sans-serif; font-weight: 400; font-size: 18px; color: var(--muted); margin-top: 24px; max-width: 520px; line-height: 1.5; }
+
+  /* Practical fields */
+  .practical-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    max-width: 720px;
+    flex: 1;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .field-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .field-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip-pick {
+    padding: 10px 18px;
+    background: var(--soft);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
+  }
+  .chip-pick:hover {
+    background: var(--bg);
+    border-color: var(--ink);
+  }
+  .chip-pick.selected {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+
+  .step-footer {
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .back-link {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 8px 0;
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+  .back-link:hover { color: var(--ink); }
+  .continue-btn {
+    display: inline-block;
+    padding: 14px 28px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: transform 200ms ease;
+  }
+  .continue-btn:hover { transform: translateX(4px); }
+
+  @media (max-width: 720px) {
+    .stage { padding: 24px 20px 32px; }
+    .topbar { padding-bottom: 40px; }
+    .step-header { margin-bottom: 40px; }
+    .practical-fields { gap: 36px; }
+    .step-footer { margin-top: 40px; flex-direction: column; gap: 20px; align-items: stretch; }
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+
+    <nav class="topbar">
+      <a href="index.html" class="wordmark">Wander<em>mind</em></a>
+      <div class="progress" aria-label="Step 5 of 6">
+        <span class="pdot on"></span>
+        <span class="pdot on"></span>
+        <span class="pdot on"></span>
+        <span class="pdot on"></span>
+        <span class="pdot now"></span>
+        <span class="pdot"></span>
+      </div>
+    </nav>
+
+    <header class="step-header">
+      <div class="step-eyebrow">Step 5 of 6 — Practical bits</div>
+      <h1 class="step-question">A few <em>practical</em> things.</h1>
+      <p class="step-hint">Just the essentials. Skip anything that doesn't apply.</p>
+    </header>
+
+    <main class="practical-fields">
+
+      <div class="field" data-mode="multi">
+        <div class="field-label">Dietary</div>
+        <div class="field-chips">
+          <button class="chip-pick">No restrictions</button>
+          <button class="chip-pick">Vegetarian</button>
+          <button class="chip-pick">Vegan</button>
+          <button class="chip-pick">Gluten-free</button>
+          <button class="chip-pick">Pescatarian</button>
+          <button class="chip-pick">Halal</button>
+          <button class="chip-pick">Kosher</button>
+        </div>
+      </div>
+
+      <div class="field" data-mode="multi">
+        <div class="field-label">Accessibility</div>
+        <div class="field-chips">
+          <button class="chip-pick">No requirements</button>
+          <button class="chip-pick">Step-free routes</button>
+          <button class="chip-pick">Visual aids</button>
+          <button class="chip-pick">Hearing aids</button>
+          <button class="chip-pick">Quieter places</button>
+        </div>
+      </div>
+
+      <div class="field" data-mode="multi">
+        <div class="field-label">Languages you speak</div>
+        <div class="field-chips">
+          <button class="chip-pick">English</button>
+          <button class="chip-pick">French</button>
+          <button class="chip-pick">Italian</button>
+          <button class="chip-pick">Spanish</button>
+          <button class="chip-pick">Portuguese</button>
+          <button class="chip-pick">German</button>
+          <button class="chip-pick">Dutch</button>
+          <button class="chip-pick">Swedish</button>
+          <button class="chip-pick">Polish</button>
+          <button class="chip-pick">Russian</button>
+          <button class="chip-pick">Ukrainian</button>
+          <button class="chip-pick">Greek</button>
+          <button class="chip-pick">Turkish</button>
+          <button class="chip-pick">Arabic</button>
+          <button class="chip-pick">Mandarin</button>
+          <button class="chip-pick">Japanese</button>
+          <button class="chip-pick">Korean</button>
+        </div>
+      </div>
+
+      <div class="field" data-mode="multi">
+        <div class="field-label">Travels with</div>
+        <div class="field-chips">
+          <button class="chip-pick">Solo</button>
+          <button class="chip-pick">+1</button>
+          <button class="chip-pick">Family</button>
+          <button class="chip-pick">Friends</button>
+          <button class="chip-pick">Mixed</button>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="step-footer">
+      <a href="onboarding-skips.html" class="back-link">← Back</a>
+      <a href="onboarding-bucket-list.html" class="continue-btn">Continue →</a>
+    </footer>
+
+  </div>
+
+  <script>
+    document.querySelectorAll('.field').forEach(field => {
+      const mode = field.dataset.mode;
+      field.querySelectorAll('.chip-pick').forEach(chip => {
+        chip.addEventListener('click', () => {
+          if (mode === 'single') {
+            field.querySelectorAll('.chip-pick').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+          } else {
+            chip.classList.toggle('selected');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

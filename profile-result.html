@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WanderMind — The Slow Wanderer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* BYCo brand tokens — design system swap points */
+  :root {
+    --bg: #FFFFFF;       /* White */
+    --ink: #000000;      /* Black */
+    --muted: #848A97;    /* Uni Grey 500 */
+    --accent: #2D39F7;   /* Super Blue 500 */
+    --line: #E3E4EA;     /* Aluminium / Grey 200 */
+    --soft: #F0F1F4;     /* Grey 100 */
+    /* Brand support colors — used in archetype palettes, not chrome */
+    --sun: #FFB200;
+    --mint: #00C378;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /*
+    SegmentAlt is the BYCo brand typeface (Regular / Medium / SemiBold / Bold).
+    Inter is loaded as a placeholder for prototyping — swap font-family declarations
+    to 'SegmentAlt' once the licensed font is installed.
+  */
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 40px 56px 96px;
+  }
+
+  /* Top nav */
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 96px;
+  }
+  .wordmark {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .wordmark em {
+    font-style: normal;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .nav-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .visibility-pill {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    cursor: default;
+  }
+
+  /* Hero */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 48px;
+    padding-bottom: 56px;
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .archetype {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: clamp(60px, 10vw, 120px);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+  }
+  .archetype em {
+    font-style: normal;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .tagline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: clamp(18px, 2vw, 22px);
+    color: var(--muted);
+    margin-top: 36px;
+    max-width: 580px;
+    line-height: 1.5;
+  }
+
+  /* Archetype spirit animal */
+  .avatar {
+    width: 104px;
+    height: 104px;
+    margin-bottom: 40px;
+  }
+  .avatar svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  .avatar .ink-fill { fill: var(--ink); }
+  .avatar .ink-stroke {
+    fill: none;
+    stroke: var(--ink);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .avatar .eye { fill: var(--bg); }
+
+  /* Signature palette — archetype-specific within brand range */
+  .palette {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+  }
+  .swatches {
+    display: flex;
+    gap: 4px;
+  }
+  .swatch {
+    width: 36px;
+    height: 88px;
+    border-radius: 8px;
+  }
+  .palette-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Wandering line */
+  .wandering {
+    padding: 72px 0 32px;
+    border-bottom: 1px solid var(--line);
+  }
+  .wandering .label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .wandering-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+  .wandering-svg .line {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+  }
+  .wandering-svg .dot {
+    fill: var(--ink);
+    stroke: var(--bg);
+    stroke-width: 2;
+  }
+  .wandering-svg .stem {
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+  .wandering-svg .place {
+    fill: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .wandering-svg .when {
+    fill: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+  }
+
+  /* Attribute grid */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px 80px;
+    padding-top: 64px;
+  }
+  .section .label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  .section .value {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  /* Meter */
+  .meter { display: flex; gap: 6px; margin-top: 18px; }
+  .dot {
+    flex: 1;
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+  }
+  .dot.on { background: var(--ink); }
+  .meter-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* Chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .chip {
+    padding: 9px 16px;
+    border-radius: 999px;
+    font-size: 14px;
+    line-height: 1;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--bg);
+    font-weight: 500;
+  }
+  .chip.muted {
+    background: transparent;
+    color: var(--muted);
+    border: 1px dashed var(--line);
+    text-decoration: line-through;
+    text-decoration-color: var(--line);
+  }
+
+  /* Bucket list */
+  .bucket {
+    columns: 2;
+    column-gap: 56px;
+    margin-top: 18px;
+    list-style: none;
+  }
+  .bucket li {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 1.5;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    break-inside: avoid;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .bucket .when {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    align-self: center;
+  }
+
+  .full { grid-column: 1 / -1; }
+
+  /* CTA */
+  .cta {
+    margin-top: 96px;
+    padding: 56px;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+  }
+  .cta-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: clamp(24px, 2.6vw, 36px);
+    line-height: 1.2;
+    max-width: 560px;
+    letter-spacing: -0.01em;
+  }
+  .cta-button {
+    padding: 16px 28px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border-radius: 999px;
+    white-space: nowrap;
+    transition: transform 200ms ease;
+  }
+  .cta-button:hover { transform: translateX(4px); }
+
+  /* Footer */
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .foot a { color: var(--muted); text-decoration: none; }
+  .foot a:hover { color: var(--ink); }
+
+  @media (max-width: 800px) {
+    .container { padding: 24px 24px 64px; }
+    .nav { padding-bottom: 56px; }
+    .hero { grid-template-columns: 1fr; gap: 40px; }
+    .palette { align-items: flex-start; }
+    .grid { grid-template-columns: 1fr; gap: 40px; padding-top: 48px; }
+    .cta { flex-direction: column; align-items: flex-start; padding: 32px; }
+    .bucket { columns: 1; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <nav class="nav">
+      <a href="index.html" class="wordmark">Wander<em>mind</em></a>
+      <div class="nav-meta">
+        <span class="visibility-pill" title="Visibility">Private</span>
+        <span>April 2026</span>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div>
+        <div class="avatar" aria-label="Spirit animal: heron">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <ellipse class="ink-fill" cx="44" cy="58" rx="14" ry="7.5" />
+            <path class="ink-fill" d="M 30 56 L 22 50 L 26 62 Z" />
+            <path class="ink-stroke" d="M 52 53 C 64 49 58 32 64 22" stroke-width="3.5" />
+            <path class="ink-stroke" d="M 62 19 L 58 13" stroke-width="1.5" />
+            <circle class="ink-fill" cx="64" cy="22" r="3.5" />
+            <path class="ink-fill" d="M 67 22 L 80 23 L 67 24 Z" />
+            <circle class="eye" cx="65" cy="21" r="0.75" />
+            <path class="ink-stroke" d="M 46 65 L 45 92" stroke-width="1.5" />
+            <path class="ink-stroke" d="M 40 65 L 36 75 L 42 80" stroke-width="1.5" />
+          </svg>
+        </div>
+        <div class="eyebrow">You are</div>
+        <h1 class="archetype">The <em>Slow</em><br />Wanderer</h1>
+        <p class="tagline">Quiet mornings, neighborhood markets, and the long way home — you travel to slow down, not speed up.</p>
+      </div>
+      <div class="palette">
+        <div class="swatches">
+          <div class="swatch" style="background:#FFE099"></div>
+          <div class="swatch" style="background:#FFB200"></div>
+          <div class="swatch" style="background:#848A97"></div>
+          <div class="swatch" style="background:#000000"></div>
+        </div>
+        <div class="palette-label">Your palette</div>
+      </div>
+    </header>
+
+    <section class="wandering">
+      <div class="label">Your wandering line</div>
+      <svg class="wandering-svg" viewBox="0 0 1000 220" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path class="line" d="M 60 130 C 130 130 160 80 220 80 C 280 80 320 140 380 140 C 440 140 480 70 540 70 C 600 70 640 130 700 130 C 770 130 820 80 880 80" />
+
+        <g>
+          <circle class="dot" cx="60" cy="130" r="5" />
+          <line class="stem" x1="60" y1="142" x2="60" y2="160" />
+          <text class="place" x="60" y="178" text-anchor="middle">Lisbon</text>
+          <text class="when" x="60" y="196" text-anchor="middle">OCT</text>
+        </g>
+
+        <g>
+          <circle class="dot" cx="220" cy="80" r="5" />
+          <line class="stem" x1="220" y1="92" x2="220" y2="160" />
+          <text class="place" x="220" y="178" text-anchor="middle">Kyoto</text>
+          <text class="when" x="220" y="196" text-anchor="middle">SPRING</text>
+        </g>
+
+        <g>
+          <circle class="dot" cx="380" cy="140" r="5" />
+          <line class="stem" x1="380" y1="152" x2="380" y2="160" />
+          <text class="place" x="380" y="178" text-anchor="middle">Vietnam</text>
+          <text class="when" x="380" y="196" text-anchor="middle">SOMEDAY</text>
+        </g>
+
+        <g>
+          <circle class="dot" cx="540" cy="70" r="5" />
+          <line class="stem" x1="540" y1="82" x2="540" y2="160" />
+          <text class="place" x="540" y="178" text-anchor="middle">Faroe Islands</text>
+          <text class="when" x="540" y="196" text-anchor="middle">SUMMER</text>
+        </g>
+
+        <g>
+          <circle class="dot" cx="700" cy="130" r="5" />
+          <line class="stem" x1="700" y1="142" x2="700" y2="160" />
+          <text class="place" x="700" y="178" text-anchor="middle">San Sebastián</text>
+          <text class="when" x="700" y="196" text-anchor="middle">ANYTIME</text>
+        </g>
+
+        <g>
+          <circle class="dot" cx="880" cy="80" r="5" />
+          <line class="stem" x1="880" y1="92" x2="880" y2="160" />
+          <text class="place" x="880" y="178" text-anchor="middle">Bernina Express</text>
+          <text class="when" x="880" y="196" text-anchor="middle">WINTER</text>
+        </g>
+      </svg>
+    </section>
+
+    <main class="grid">
+
+      <section class="section">
+        <div class="label">Pace</div>
+        <div class="value">Unhurried</div>
+        <div class="meter">
+          <span class="dot on"></span>
+          <span class="dot on"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+        <div class="meter-labels"><span>Slow days</span><span>Packed schedule</span></div>
+      </section>
+
+      <section class="section">
+        <div class="label">Budget</div>
+        <div class="value">Considered</div>
+        <div class="meter">
+          <span class="dot on"></span>
+          <span class="dot on"></span>
+          <span class="dot on"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+        <div class="meter-labels"><span>Frugal</span><span>No limit</span></div>
+      </section>
+
+      <section class="section">
+        <div class="label">Travels with</div>
+        <div class="value">Solo, sometimes a +1</div>
+      </section>
+
+      <section class="section">
+        <div class="label">Languages</div>
+        <div class="value">English · Conversational French</div>
+      </section>
+
+      <section class="section full">
+        <div class="label">Loves</div>
+        <div class="chips">
+          <span class="chip">Local cafés</span>
+          <span class="chip">Neighborhood markets</span>
+          <span class="chip">Walkable cities</span>
+          <span class="chip">Slow trains</span>
+          <span class="chip">Bookshops</span>
+          <span class="chip">Long lunches</span>
+          <span class="chip">Shoulder season</span>
+          <span class="chip">Independent hotels</span>
+        </div>
+      </section>
+
+      <section class="section full">
+        <div class="label">Skips</div>
+        <div class="chips">
+          <span class="chip muted">Crowded landmarks</span>
+          <span class="chip muted">Packed itineraries</span>
+          <span class="chip muted">Mega resorts</span>
+          <span class="chip muted">Late-night clubs</span>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="label">Dietary</div>
+        <div class="value">Vegetarian</div>
+      </section>
+
+      <section class="section">
+        <div class="label">Accessibility</div>
+        <div class="value">No requirements</div>
+      </section>
+
+      <section class="section full">
+        <div class="label">Bucket list</div>
+        <ul class="bucket">
+          <li><span>Lisbon</span><span class="when">October</span></li>
+          <li><span>Kyoto, shoulder season</span><span class="when">Spring</span></li>
+          <li><span>Slow train across Vietnam</span><span class="when">Someday</span></li>
+          <li><span>Faroe Islands</span><span class="when">Summer</span></li>
+          <li><span>A week in San Sebastián</span><span class="when">Anytime</span></li>
+          <li><span>The Bernina Express</span><span class="when">Winter</span></li>
+        </ul>
+      </section>
+
+    </main>
+
+    <div class="cta">
+      <div class="cta-text">Ready to turn this into somewhere real?</div>
+      <button class="cta-button">Generate my itinerary →</button>
+    </div>
+
+    <div class="foot">
+      <span>WanderMind · Traveler Profile</span>
+      <a href="onboarding-welcome.html">Edit profile</a>
+    </div>
+
+  </div>
+</body>
+</html>

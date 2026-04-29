@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WanderMind — Travel that feels like you</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --ink: #000000;
+    --muted: #848A97;
+    --accent: #2D39F7;
+    --line: #E3E4EA;
+    --soft: #F0F1F4;
+    --sun: #FFB200;
+    --mint: #00C378;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Top nav */
+  .topnav {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .wordmark {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .wordmark em { font-style: normal; font-weight: 400; color: var(--accent); }
+  .topnav-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .nav-link {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 200ms ease;
+  }
+  .nav-link:hover { color: var(--ink); }
+  .nav-link .soon-tag {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 3px 6px;
+    background: var(--soft);
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .topnav-cta {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    color: var(--ink);
+    padding: 10px 18px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+  }
+  .topnav-cta:hover {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
+  /* Recently from travelers — community future-state */
+  .recent-rail {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 96px 56px;
+    border-top: 1px solid var(--line);
+  }
+  .recent-rail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 48px;
+  }
+  .rail-soon-tag {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 4px 10px;
+    background: var(--soft);
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .rail-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .rail-card {
+    padding: 28px 24px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    cursor: not-allowed;
+    transition: border-color 200ms ease;
+  }
+  .rail-card:hover { border-color: var(--ink); }
+  .rail-tag {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .rail-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .rail-snippet {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+    flex: 1;
+  }
+  .rail-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+
+  /* Hero */
+  .hero {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 80px 56px 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+  }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .hero-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: clamp(60px, 10vw, 132px);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    max-width: 920px;
+  }
+  .hero-title em { font-style: normal; color: var(--accent); }
+  .hero-sub {
+    font-size: clamp(18px, 2vw, 22px);
+    color: var(--muted);
+    max-width: 580px;
+    line-height: 1.5;
+  }
+  .primary-cta {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 18px 32px;
+    background: var(--accent);
+    color: var(--bg);
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    border-radius: 999px;
+    transition: transform 200ms ease;
+  }
+  .primary-cta:hover { transform: translateX(4px); }
+
+  /* How it works */
+  .how-it-works {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 96px 56px;
+    border-top: 1px solid var(--line);
+  }
+  .section-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 56px;
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 56px;
+  }
+  .how-step {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .step-num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+  }
+  .how-step h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+  }
+  .how-step p {
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.5;
+    max-width: 320px;
+  }
+
+  /* Showcase */
+  .showcase {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 96px 56px;
+    border-top: 1px solid var(--line);
+  }
+  .showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 48px;
+  }
+  .showcase-card {
+    padding: 40px 24px;
+    background: var(--soft);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 18px;
+  }
+  .showcase-animal {
+    width: 88px;
+    height: 88px;
+  }
+  .showcase-animal svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  .showcase-animal .ink-fill { fill: var(--ink); }
+  .showcase-animal .ink-stroke { fill: none; stroke: var(--ink); stroke-linecap: round; stroke-linejoin: round; }
+  .showcase-animal .eye { fill: var(--soft); }
+  .showcase-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: clamp(24px, 3vw, 34px);
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+  }
+  .showcase-name em { font-style: normal; color: var(--accent); }
+  .showcase-tagline {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .showcase-palette {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+  }
+  .showcase-palette .swatch {
+    width: 28px;
+    height: 64px;
+    border-radius: 6px;
+  }
+  .showcase-note {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 40px;
+    text-align: center;
+  }
+
+  /* Closing CTA */
+  .closing {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 120px 56px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    text-align: center;
+  }
+  .closing-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+  }
+  .closing-title em { font-style: normal; color: var(--accent); }
+
+  /* Footer */
+  .footer {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 64px 56px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .footer-meta {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  @media (max-width: 800px) {
+    .topnav { padding: 24px; }
+    .topnav-actions { gap: 16px; }
+    .nav-link { display: none; }  /* Drop the Explore link on mobile to keep topnav clean */
+    .hero { padding: 48px 24px 80px; gap: 24px; }
+    .how-it-works, .showcase, .closing, .recent-rail { padding: 64px 24px; }
+    .closing { padding: 80px 24px; }
+    .steps { grid-template-columns: 1fr; gap: 40px; }
+    .showcase-grid { grid-template-columns: 1fr; }
+    .showcase-card { padding: 32px 24px; }
+    .rail-cards { grid-template-columns: 1fr; }
+    .footer { padding: 48px 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Top nav -->
+  <nav class="topnav">
+    <a href="index.html" class="wordmark">Wander<em>mind</em></a>
+    <div class="topnav-actions">
+      <a href="#" class="nav-link" aria-disabled="true" title="Coming soon">
+        Explore by archetype
+        <span class="soon-tag">Soon</span>
+      </a>
+      <a href="onboarding-welcome.html" class="topnav-cta">Begin →</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <p class="eyebrow">Personalized travel itineraries</p>
+    <h1 class="hero-title">Travel that feels like <em>you</em>.</h1>
+    <p class="hero-sub">Build a traveler profile in five minutes. We'll plan trips that move the way you do — not someone else's bucket list.</p>
+    <a href="onboarding-welcome.html" class="primary-cta">Build your profile →</a>
+  </section>
+
+  <!-- How it works -->
+  <section class="how-it-works">
+    <p class="section-eyebrow">How it works</p>
+    <div class="steps">
+      <div class="how-step">
+        <span class="step-num">01</span>
+        <h3>Tell us how you travel</h3>
+        <p>Six short steps. About five minutes. Pace, places, and the things that move you.</p>
+      </div>
+      <div class="how-step">
+        <span class="step-num">02</span>
+        <h3>Meet your archetype</h3>
+        <p>We match you to a traveler type — your name, your palette, your spirit animal. Yours alone.</p>
+      </div>
+      <div class="how-step">
+        <span class="step-num">03</span>
+        <h3>Generate your trips</h3>
+        <p>Itineraries that fit your rhythm. Slow when you're slow, ambitious when you're not.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Archetype showcase -->
+  <section class="showcase">
+    <p class="section-eyebrow">Meet a few travelers</p>
+    <div class="showcase-grid">
+
+      <!-- Slow Wanderer -->
+      <div class="showcase-card">
+        <div class="showcase-animal" aria-label="Spirit animal: heron">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <ellipse class="ink-fill" cx="44" cy="58" rx="14" ry="7.5" />
+            <path class="ink-fill" d="M 30 56 L 22 50 L 26 62 Z" />
+            <path class="ink-stroke" d="M 52 53 C 64 49 58 32 64 22" stroke-width="3.5" />
+            <path class="ink-stroke" d="M 62 19 L 58 13" stroke-width="1.5" />
+            <circle class="ink-fill" cx="64" cy="22" r="3.5" />
+            <path class="ink-fill" d="M 67 22 L 80 23 L 67 24 Z" />
+            <circle class="eye" cx="65" cy="21" r="0.75" />
+            <path class="ink-stroke" d="M 46 65 L 45 92" stroke-width="1.5" />
+            <path class="ink-stroke" d="M 40 65 L 36 75 L 42 80" stroke-width="1.5" />
+          </svg>
+        </div>
+        <h2 class="showcase-name">The <em>Slow</em> Wanderer</h2>
+        <p class="showcase-tagline">Quiet mornings, neighborhood markets, and the long way home — you travel to slow down, not speed up.</p>
+        <div class="showcase-palette">
+          <div class="swatch" style="background:#FFE099"></div>
+          <div class="swatch" style="background:#FFB200"></div>
+          <div class="swatch" style="background:#848A97"></div>
+          <div class="swatch" style="background:#000000"></div>
+        </div>
+      </div>
+
+      <!-- Wild Voyager -->
+      <div class="showcase-card">
+        <div class="showcase-animal" aria-label="Spirit animal: stag">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <ellipse class="ink-fill" cx="44" cy="56" rx="20" ry="9" />
+            <rect class="ink-fill" x="28" y="60" width="2.5" height="28" />
+            <rect class="ink-fill" x="34" y="60" width="2.5" height="28" />
+            <rect class="ink-fill" x="52" y="60" width="2.5" height="28" />
+            <rect class="ink-fill" x="58" y="60" width="2.5" height="28" />
+            <path class="ink-fill" d="M 24 52 L 18 48 L 22 56 Z" />
+            <path class="ink-stroke" d="M 60 49 C 70 44 75 36 75 26" stroke-width="6.5" />
+            <ellipse class="ink-fill" cx="74" cy="22" rx="6" ry="4" />
+            <path class="ink-stroke" d="M 70 16 L 64 4" stroke-width="1.5" />
+            <path class="ink-stroke" d="M 67 11 L 62 9" stroke-width="1.25" />
+            <path class="ink-stroke" d="M 68 7 L 62 5" stroke-width="1.25" />
+            <path class="ink-stroke" d="M 78 16 L 84 4" stroke-width="1.5" />
+            <path class="ink-stroke" d="M 81 11 L 86 9" stroke-width="1.25" />
+            <path class="ink-stroke" d="M 80 7 L 86 5" stroke-width="1.25" />
+            <circle class="eye" cx="76" cy="22" r="0.7" />
+          </svg>
+        </div>
+        <h2 class="showcase-name">The <em>Wild</em> Voyager</h2>
+        <p class="showcase-tagline">Trail boots, mountain mornings, lakes that stay cold — you travel to breathe, not to escape.</p>
+        <div class="showcase-palette">
+          <div class="swatch" style="background:#80FFCE"></div>
+          <div class="swatch" style="background:#00C378"></div>
+          <div class="swatch" style="background:#525661"></div>
+          <div class="swatch" style="background:#000000"></div>
+        </div>
+      </div>
+
+      <!-- Night Owl -->
+      <div class="showcase-card">
+        <div class="showcase-animal" aria-label="Spirit animal: owl">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <ellipse class="ink-fill" cx="50" cy="55" rx="28" ry="32" />
+            <path class="ink-fill" d="M 32 26 L 26 12 L 38 22 Z" />
+            <path class="ink-fill" d="M 68 26 L 74 12 L 62 22 Z" />
+            <circle class="eye" cx="40" cy="46" r="8" />
+            <circle class="eye" cx="60" cy="46" r="8" />
+            <circle class="ink-fill" cx="40" cy="46" r="3" />
+            <circle class="ink-fill" cx="60" cy="46" r="3" />
+            <path class="ink-fill" d="M 47 56 L 53 56 L 50 60 Z" />
+          </svg>
+        </div>
+        <h2 class="showcase-name">The <em>Night</em> Owl</h2>
+        <p class="showcase-tagline">Late dinners, neon streets, the city after midnight — you travel for the after-hours, not the postcards.</p>
+        <div class="showcase-palette">
+          <div class="swatch" style="background:#2D39F7"></div>
+          <div class="swatch" style="background:#3A3E45"></div>
+          <div class="swatch" style="background:#A8ABBD"></div>
+          <div class="swatch" style="background:#000000"></div>
+        </div>
+      </div>
+
+    </div>
+    <p class="showcase-note">Three of many. Where do you fit?</p>
+  </section>
+
+  <!-- Recently from travelers — community future-state -->
+  <section class="recent-rail">
+    <div class="recent-rail-header">
+      <p class="section-eyebrow" style="margin: 0;">Recently from travelers</p>
+      <span class="rail-soon-tag">Soon</span>
+    </div>
+    <div class="rail-cards">
+
+      <article class="rail-card">
+        <span class="rail-tag">Slow Wanderer</span>
+        <h3 class="rail-title">5 days in Lisbon, October</h3>
+        <p class="rail-snippet">Cafés in Alfama, fado on Tuesdays, the long climb up to São Jorge at golden hour.</p>
+        <div class="rail-meta">
+          <span>Lisbon · Portugal</span>
+          <span>by Anya</span>
+        </div>
+      </article>
+
+      <article class="rail-card">
+        <span class="rail-tag">Night Owl</span>
+        <h3 class="rail-title">Tokyo, alone, in late autumn</h3>
+        <p class="rail-snippet">Late-night ramen in Shinjuku, jazz bars in Shibuya, the Yamanote line at 1am.</p>
+        <div class="rail-meta">
+          <span>Tokyo · Japan</span>
+          <span>by Marco</span>
+        </div>
+      </article>
+
+      <article class="rail-card">
+        <span class="rail-tag">Wild Voyager</span>
+        <h3 class="rail-title">Mountain villages of Slovenia</h3>
+        <p class="rail-snippet">Trail-running between alpine huts, lakes you can drink from, evenings under the stars.</p>
+        <div class="rail-meta">
+          <span>Triglav · Slovenia</span>
+          <span>by Sofia</span>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- Closing CTA -->
+  <section class="closing">
+    <h2 class="closing-title">Find your <em>way</em>.</h2>
+    <a href="onboarding-welcome.html" class="primary-cta">Begin your profile →</a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <a href="index.html" class="wordmark">Wander<em>mind</em></a>
+    <span class="footer-meta">© 2026 · A traveler profile, then itineraries that fit it</span>
+  </footer>
+
+</body>
+</html>
